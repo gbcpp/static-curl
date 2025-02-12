@@ -5,7 +5,9 @@ INTERFACE="lo"
 
 # 配置流量控制规则
 configure() {
-  #sudo tc qdisc add dev $INTERFACE tbf root rate 1mbit burst 32kbit latency 400ms
+  # 添加限速
+  sudo tc qdisc add dev $INTERFACE root tbf rate 1mbit burst 32kbit latency 400ms
+  # 添加延迟和丢包
   sudo tc qdisc add dev $INTERFACE root netem delay 30ms 5ms distribution normal loss random 3%
   echo "已配置 3% 丢包率和 30～35ms 延迟抖动"
 }
@@ -33,7 +35,7 @@ main() {
     show
     ;;
   *)
-    echo "用法: $0 [configure|cleanup]"
+    echo "用法: $0 [configure|show|cleanup]"
     exit 1
     ;;
   esac
